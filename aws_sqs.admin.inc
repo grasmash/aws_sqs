@@ -8,19 +8,25 @@
  * Menu callback for admin form.
  */
 function aws_sqs_settings_form() {
-  $form['aws_sqs_aws_key'] = array(
+  $form['credentials'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('AWS credentials'),
+    '#description' => t('Follow the instructions to set up your AWS credentials !here.',
+      array('!here' => l('here', 'http://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSGettingStartedGuide/AWSCredentials.html'))),
+  );
+  $form['credentials']['aws_sqs_aws_key'] = array(
     '#type' => 'textfield',
-    '#title' => t('Amazon Web Services Key'),
+    '#title' => t('Access Key ID'),
     '#default_value' => variable_get('aws_sqs_aws_key', ''),
     '#required' => TRUE,
-    '#description' => t('Amazon Web Services Key. Found in the AWS Security Credentials.'),
+    '#description' => t('Amazon Web Services Key.'),
   );
-  $form['aws_sqs_aws_secret'] = array(
+  $form['credentials']['aws_sqs_aws_secret'] = array(
     '#type' => 'textfield',
-    '#title' => t('Amazon Web Services Secret Key'),
+    '#title' => t('Secret Access Key'),
     '#default_value' => variable_get('aws_sqs_aws_secret', ''),
     '#required' => TRUE,
-    '#description' => t('Amazon Web Services Secret Key. Found in the AWS Security Credentials.'),
+    '#description' => t('Amazon Web Services Secret Key.'),
   );
 
   $seconds = range(0, 20);
