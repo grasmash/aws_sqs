@@ -25,7 +25,7 @@ use Aws\Sqs\SqsClient;
 /**
  * Amazon queue.
  */
-class awsSqsQueue implements DrupalReliableQueueInterface {
+class AwsSqsQueue implements DrupalReliableQueueInterface {
   /**
    * The name of the queue this instance is working with.
    *
@@ -86,7 +86,7 @@ class awsSqsQueue implements DrupalReliableQueueInterface {
    * @return object
    */
   static public function get($name) {
-    return new awsSqsQueue($name);  
+    return new AwsSqsQueue($name);  
   }
 
   /**
