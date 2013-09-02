@@ -62,22 +62,16 @@ function aws_sqs_settings_form() {
     '#description' => t('Amazon Web Services Secret Key.'),
   );
 
-  $form['aws_sqs_enable'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Send all Queues to the amazon queue system'),
-    '#default_value' => variable_get('aws_sqs_enable', ''),
-    '#description' => t('Switches the default queue class to the aws queue class.'),
+  $form['queue_default_class'] = array(
+    '#type' => 'select',
+    '#title' => t('Default Queue'),
+    '#default_value' => variable_get('queue_default_class', 'SystemQueue'),
+    '#description' => t('Set the default queue class. If you select awsSqsQueue here, AWS SQS will be used anytime a queue is instantiated via DrupalQueue:get($name).'),
+    '#options' => array(
+      'awsSqsQueue' => 'awsSqsQueue',
+      'SystemQueue' => 'SystemQueue',
+      'MemoryQueue' => 'MemoryQueue',
+    ),
   );
-  $form['#submit'][] = 'aws_sqs_settings_form_submit';
   return system_settings_form($form);
-}
-
-/**
- * Submit callback for admin settings form.
- */
-function aws_sqs_settings_form_submit($form, &$form_state) {
-  // TODO If a user unchecks this box, after checking it, awsSqsQueue persists.
-  if (!empty($form_state['values']['aws_sqs_enable'])) {
-    variable_set('queue_default_class', 'awsSqsQueue');
-  }
 }
