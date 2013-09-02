@@ -119,13 +119,25 @@ class AwsSqsQueue implements DrupalReliableQueueInterface {
    *
    * @param $data
    *   Can be of any type, mostly array or object. Will be stored
-   *   serialized in the queue sytem.
+   *   serialized in the queue sytem. If an item retreived from the queue is
+   *   being re-submitted to the queue (if is_object($item) && $item->data &&
+   *   item->item_id), only $item->data will be stored.
    *
    * @return bool
    */
   public function createItem($data) {
     // Encapsulate our data
     $serialized_data = serialize($data);
+
+    // Check to see if someone is trying to save an item originally retrieved
+    // from the queue. If so, this really should have been submitted as
+    // $item->data, not $item. Reformat this so we don't save metadata or
+    // confuse item_ids downstream.
+    if (is_object($data) && property_exists($data, 'data') && property_exists($data, 'item_id')) {
+      $text = t('Do not re-queue whole items retrieved from the SQS queue. This included metadata, like the item_id. Pass $item->data to createItem() as a parameter, rather than passing the entire $item. $item->data is being saved. The rest is being ignored.');
+      $data = $data->data;
+      watchdog('aws_sqs', $text, array(), WATCHDOG_ERROR);
+    }
 
     // TODO Add a check here for message size? Log it?
 
