@@ -96,7 +96,7 @@ class AwsSqsQueue implements DrupalReliableQueueInterface {
    * TODO What do these two settings do? Can we get rid of them or move them
    * to getters/setters?
    */
-  static function getOptions($name) {
+  static private function getOptions($name) {
     $options = variable_get('aws_sqs_' . $name, array());
     $defaults = variable_get('aws_sqs_default_queue', array());
     $options += $defaults;
@@ -323,7 +323,7 @@ class AwsSqsQueue implements DrupalReliableQueueInterface {
    *
    * @return bool
    */
-  static public function isGuzzleServiceResourceModel($object) {
+  static private function isGuzzleServiceResourceModel($object) {
     return (is_object($object) && get_class($object) == 'Guzzle\Service\Resource\Model') ? TRUE : FALSE;
   }
 
@@ -331,7 +331,7 @@ class AwsSqsQueue implements DrupalReliableQueueInterface {
    * Getters and setters                                 
    *******************************************************/
 
-  public function getAwsKey() {
+  private function getAwsKey() {
     if (!isset($this->awsKey)) $this->setAwsKey();  
     return $this->awsKey;
   }
@@ -340,7 +340,7 @@ class AwsSqsQueue implements DrupalReliableQueueInterface {
     $this->awsKey = variable_get('aws_sqs_aws_key', '');
   }
 
-  public function getAwsSecret() {
+  private function getAwsSecret() {
     if (!isset($this->awsSecret)) $this->setAwsSecret();
     return $this->awsSecret;
   }
@@ -349,7 +349,7 @@ class AwsSqsQueue implements DrupalReliableQueueInterface {
     $this->awsSecret = variable_get('aws_sqs_aws_secret', '');
   }
 
-  public function getAwsRegion() {
+  private function getAwsRegion() {
     if (!isset($this->awsRegion)) $this->setAwsRegion();
     return $this->awsRegion;
   }
@@ -358,7 +358,7 @@ class AwsSqsQueue implements DrupalReliableQueueInterface {
     $this->awsRegion = variable_get('aws_sqs_region', self::REGION_EU_WEST_1);
   }
 
-  public function getClaimTimeout() {
+  private function getClaimTimeout() {
     if (!isset($this->claimTimeout)) $this->setClaimTimeout();
     return $this->claimTimeout;
   }
@@ -367,7 +367,7 @@ class AwsSqsQueue implements DrupalReliableQueueInterface {
     $this->claimTimeout = variable_get('aws_sqs_claimtimeout', 60);
   }
 
-  public function getClient() {
+  private function getClient() {
     if (!isset($this->client)) $this->setClient();
     return $this->client;
   }
@@ -384,7 +384,7 @@ class AwsSqsQueue implements DrupalReliableQueueInterface {
   /**
    * $name is a required, user-defined param in __construct. It is set there.
    */
-  public function getName() {
+  private function getName() {
     return $this->name;
   }
 
@@ -392,7 +392,7 @@ class AwsSqsQueue implements DrupalReliableQueueInterface {
     $this->name = $name;  
   }
 
-  public function getQueueUrl() {
+  private function getQueueUrl() {
     if (!isset($this->queueUrl)) {
       $text = t("You have to create a queue before you can get its URL. Use createQueue().");
       watchdog('aws_sqs', $text, array(), WATCHDOG_WARNING);
@@ -410,7 +410,7 @@ class AwsSqsQueue implements DrupalReliableQueueInterface {
     $this->queueUrl = $queueUrl;
   }
 
-  public function getWaitTimeSeconds() {
+  private function getWaitTimeSeconds() {
     if (!isset($this->waitTimeSeconds)) $this->setWaitTimeSeconds();
     return $this->waitTimeSeconds;
   }
