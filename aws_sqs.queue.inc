@@ -70,9 +70,7 @@ class AwsSqsQueue implements DrupalReliableQueueInterface {
     $this->setAwsKey();
     $this->setAwsSecret();
     $this->setAwsRegion();
-    $this->setClaimTimeout();
     $this->setClient();
-    $this->setWaitTimeSeconds();
 
     // Check if keys are available.
     if (!$this->getAwsKey() || !$this->getAwsSecret()) {
