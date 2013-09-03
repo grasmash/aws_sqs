@@ -125,7 +125,7 @@ class AwsSqsQueue implements DrupalReliableQueueInterface {
    */
   public function createItem($data) {
     // Encapsulate our data
-    $serialized_data = serialize($data);
+    $serialized_data = $this->serialize($data);
 
     // Check to see if someone is trying to save an item originally retrieved
     // from the queue. If so, this really should have been submitted as
@@ -223,7 +223,7 @@ class AwsSqsQueue implements DrupalReliableQueueInterface {
 
     $item = new stdClass();
     $message = $response->getPath('Messages/*');
-    $item->data = unserialize($message['Body']);
+    $item->data = $this->unserialize($message['Body']);
     $item->item_id = $message['ReceiptHandle'];
 
     return $item;
@@ -325,6 +325,26 @@ class AwsSqsQueue implements DrupalReliableQueueInterface {
    */
   static private function isGuzzleServiceResourceModel($object) {
     return (is_object($object) && get_class($object) == 'Guzzle\Service\Resource\Model') ? TRUE : FALSE;
+  }
+
+  /**
+   * PHP's native serialize() isn't very portable. This method enables people to
+   * extend this class and support other serialization formats (so that
+   * something other than PHP can potentially process the data in the queue, as
+   * per discussion here: https://drupal.org/node/1956190).
+   */
+  protected static function serialize($data) {
+    return serialize($data);
+  }
+
+  /**
+   * PHP's native serialize() isn't very portable. This method enables people to
+   * extend this class and support other serialization formats (so that
+   * something other than PHP can potentially process the data in the queue, as
+   * per discussion here: https://drupal.org/node/1956190).
+   */
+  protected static function unserialize($data) {
+    return serialize($data);
   }
 
   /*******************************************************
